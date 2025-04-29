@@ -10,18 +10,23 @@
         href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
     />
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         #map {
             width: 100%;
-            height: 90vh;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">Prague Writers: Layered Literary Map</h2>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
+
         var map = L.map('map').setView([50.087, 14.421], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -29,8 +34,18 @@
             maxZoom: 18,
         }).addTo(map);
 
-        function addMarker(group, coords, name, desc) {
-            L.marker(coords).bindPopup("<b>" + name + "</b><br>" + desc).addTo(group);
+        function createIcon(color) {
+            return new L.Icon({
+                iconUrl: `https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|${color}`,
+                iconSize: [21, 34],
+                iconAnchor: [10, 34],
+                popupAnchor: [0, -30]
+            });
+        }
+
+        function addMarker(group, coords, title, description, iconColor) {
+            const icon = createIcon(iconColor);
+            L.marker(coords, { icon: icon }).bindPopup("<b>" + title + "</b><br>" + description).addTo(group);
         }
 
         var kafkaGroup = L.layerGroup();
@@ -39,30 +54,45 @@
         var kunderaGroup = L.layerGroup();
         var hulovaGroup = L.layerGroup();
 
-        // Franz Kafka (Black)
-        addMarker(kafkaGroup, [50.0827, 14.4205], "Cafe Louvre", "Kafka and Capek spent time here");
-        addMarker(kafkaGroup, [50.0900, 14.4044], "Franz Kafka Museum", "Museum dedicated to Kafka’s legacy");
-        addMarker(kafkaGroup, [50.0870, 14.4200], "Old Town Square", "Kafka was born and raised here");
-        addMarker(kafkaGroup, [50.0879, 14.4244], "Charles University", "Kafka studied here");
+        // Franz Kafka (black)
+        addMarker(kafkaGroup, [50.0827, 14.4205], "Franz Kafka – Café Louvre", 
+            "Kafka frequented this intellectual café, also visited by Karel Čapek.", "000000");
+        addMarker(kafkaGroup, [50.0900, 14.4044], "Franz Kafka – Franz Kafka Museum", 
+            "A museum dedicated to the writer's life and existential legacy.", "000000");
+        addMarker(kafkaGroup, [50.0870, 14.4200], "Franz Kafka – Old Town Square", 
+            "Birthplace of Kafka, central to his early life and literary perspective.", "000000");
+        addMarker(kafkaGroup, [50.0879, 14.4244], "Franz Kafka – Charles University", 
+            "Kafka studied law here; the environment shaped his worldview.", "000000");
 
-        // Karel Čapek (Red)
-        addMarker(capekGroup, [50.0701, 14.4033], "Capek Villa", "Home of Karel Čapek");
-        addMarker(capekGroup, [50.0812, 14.4149], "Kavarna Slavia", "Čapek spent time here with his brother");
-        addMarker(capekGroup, [50.0827, 14.4205], "Cafe Louvre", "Kafka and Capek spent time here");
+        // Karel Čapek (red)
+        addMarker(capekGroup, [50.0701, 14.4033], "Karel Čapek – Čapek Villa", 
+            "Home of Karel Čapek, where he engaged with political and philosophical ideas.", "FF0000");
+        addMarker(capekGroup, [50.0812, 14.4149], "Karel Čapek – Kavárna Slavia", 
+            "Čapek and his brother met here with Prague’s artistic community.", "FF0000");
+        addMarker(capekGroup, [50.0827, 14.4205], "Karel Čapek – Café Louvre", 
+            "A shared literary space with Franz Kafka in early 20th-century Prague.", "FF0000");
 
-        // Jiří Weil (Pink)
-        addMarker(weilGroup, [50.0907, 14.4211], "Josefov", "Inspiration from the Jewish quarter");
-        addMarker(weilGroup, [50.0902, 14.4195], "Old Jewish Cemetery", "Tribute to Jewish victims of WWII");
+        // Jiří Weil (pink)
+        addMarker(weilGroup, [50.0907, 14.4211], "Jiří Weil – Josefov", 
+            "Weil’s literary focus on Jewish life was inspired by Prague’s Jewish quarter.", "FF69B4");
+        addMarker(weilGroup, [50.0902, 14.4195], "Jiří Weil – Old Jewish Cemetery", 
+            "Memorial space featured in his reflections on loss during the Holocaust.", "FF69B4");
 
-        // Milan Kundera (Purple)
-        addMarker(kunderaGroup, [50.0813, 14.4205], "Narodni Trida", "Velvet Revolution landmark");
-        addMarker(kunderaGroup, [50.0881, 14.4034], "Mala Strana", "Philosophical inspiration");
-        addMarker(kunderaGroup, [50.0879, 14.4244], "Charles University", "Kundera studied here");
+        // Milan Kundera (purple)
+        addMarker(kunderaGroup, [50.0813, 14.4205], "Milan Kundera – Národní Třída", 
+            "A symbolic site of the Velvet Revolution; central to Kundera’s political philosophy.", "800080");
+        addMarker(kunderaGroup, [50.0881, 14.4034], "Milan Kundera – Malá Strana", 
+            "Kundera found inspiration here for themes of memory and exile.", "800080");
+        addMarker(kunderaGroup, [50.0879, 14.4244], "Milan Kundera – Charles University", 
+            "Studied here, shaping his philosophical and literary trajectory.", "800080");
 
-        // Petra Hůlová (Blue)
-        addMarker(hulovaGroup, [50.0534, 14.4116], "MeetFactory", "Collaboration partner");
-        addMarker(hulovaGroup, [50.1100, 14.4513], "DOX Centre for Contemporary Art", "Artistic inspiration");
-        addMarker(hulovaGroup, [50.0879, 14.4244], "Charles University", "Hůlová studied here");
+        // Petra Hůlová (blue)
+        addMarker(hulovaGroup, [50.0534, 14.4116], "Petra Hůlová – MeetFactory", 
+            "Contemporary cultural venue where Hůlová collaborates and draws creative energy.", "0000FF");
+        addMarker(hulovaGroup, [50.1100, 14.4513], "Petra Hůlová – DOX Centre for Contemporary Art", 
+            "A source of modern artistic influence in Hůlová’s post-socialist themes.", "0000FF");
+        addMarker(hulovaGroup, [50.0879, 14.4244], "Petra Hůlová – Charles University", 
+            "Studied here; influences her explorations of identity and memory.", "0000FF");
 
         var overlays = {
             "Franz Kafka": kafkaGroup,
@@ -79,6 +109,7 @@
         weilGroup.addTo(map);
         kunderaGroup.addTo(map);
         hulovaGroup.addTo(map);
+
     </script>
 </body>
 </html>

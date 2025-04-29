@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prague Writers Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    />
+    <style>
+        #map {
+            width: 100%;
+            height: 90vh;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Prague Writers: Layered Literary Map</h2>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([50.087, 14.421], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        function addMarker(group, coords, name, desc) {
+            L.marker(coords).bindPopup("<b>" + name + "</b><br>" + desc).addTo(group);
+        }
+
+        var kafkaGroup = L.layerGroup();
+        var capekGroup = L.layerGroup();
+        var weilGroup = L.layerGroup();
+        var kunderaGroup = L.layerGroup();
+        var hulovaGroup = L.layerGroup();
+
+        // Franz Kafka (Black)
+        addMarker(kafkaGroup, [50.0827, 14.4205], "Cafe Louvre", "Kafka and Capek spent time here");
+        addMarker(kafkaGroup, [50.0900, 14.4044], "Franz Kafka Museum", "Museum dedicated to Kafka’s legacy");
+        addMarker(kafkaGroup, [50.0870, 14.4200], "Old Town Square", "Kafka was born and raised here");
+        addMarker(kafkaGroup, [50.0879, 14.4244], "Charles University", "Kafka studied here");
+
+        // Karel Čapek (Red)
+        addMarker(capekGroup, [50.0701, 14.4033], "Capek Villa", "Home of Karel Čapek");
+        addMarker(capekGroup, [50.0812, 14.4149], "Kavarna Slavia", "Čapek spent time here with his brother");
+        addMarker(capekGroup, [50.0827, 14.4205], "Cafe Louvre", "Kafka and Capek spent time here");
+
+        // Jiří Weil (Pink)
+        addMarker(weilGroup, [50.0907, 14.4211], "Josefov", "Inspiration from the Jewish quarter");
+        addMarker(weilGroup, [50.0902, 14.4195], "Old Jewish Cemetery", "Tribute to Jewish victims of WWII");
+
+        // Milan Kundera (Purple)
+        addMarker(kunderaGroup, [50.0813, 14.4205], "Narodni Trida", "Velvet Revolution landmark");
+        addMarker(kunderaGroup, [50.0881, 14.4034], "Mala Strana", "Philosophical inspiration");
+        addMarker(kunderaGroup, [50.0879, 14.4244], "Charles University", "Kundera studied here");
+
+        // Petra Hůlová (Blue)
+        addMarker(hulovaGroup, [50.0534, 14.4116], "MeetFactory", "Collaboration partner");
+        addMarker(hulovaGroup, [50.1100, 14.4513], "DOX Centre for Contemporary Art", "Artistic inspiration");
+        addMarker(hulovaGroup, [50.0879, 14.4244], "Charles University", "Hůlová studied here");
+
+        var overlays = {
+            "Franz Kafka": kafkaGroup,
+            "Karel Čapek": capekGroup,
+            "Jiří Weil": weilGroup,
+            "Milan Kundera": kunderaGroup,
+            "Petra Hůlová": hulovaGroup
+        };
+
+        L.control.layers(null, overlays).addTo(map);
+
+        kafkaGroup.addTo(map);
+        capekGroup.addTo(map);
+        weilGroup.addTo(map);
+        kunderaGroup.addTo(map);
+        hulovaGroup.addTo(map);
+    </script>
+</body>
+</html>
